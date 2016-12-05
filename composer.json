@@ -2,7 +2,6 @@
     "type": "library",
     "name": "codeages/rate-limiter",
     "description": "Rate Limiting Library With Token Bucket Algorithm",
-    "version": "1.2.0",
     "require": {
         "php": ">=5.3"
     },
