@@ -2,8 +2,9 @@
 
 use Codeages\RateLimiter\RateLimiter;
 use Codeages\RateLimiter\Storage\Storage;
+use PHPUnit\Framework\TestCase;
 
-class RateLimiterTest extends \PHPUnit_Framework_TestCase
+class RateLimiterTest extends TestCase
 {
     const NAME = 'RateLimiterTest';
     const MAX_REQUESTS = 10;
@@ -20,6 +21,12 @@ class RateLimiterTest extends \PHPUnit_Framework_TestCase
         $pdo = new PDO(getenv('MYSQL_DSN'), getenv('MYSQL_USER'), getenv('MYSQL_MYSQL_PASSWORD'));
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $storage = new \Codeages\RateLimiter\Storage\MySQLPDOStorage($pdo);
+        $this->check($storage);
+    }
+
+    public function testCheckArray()
+    {
+        $storage = new \Codeages\RateLimiter\Storage\ArrayStorage();
         $this->check($storage);
     }
 
