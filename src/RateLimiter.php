@@ -54,7 +54,7 @@ class RateLimiter
         }
     }
 
-    public function getAllow($id)
+    public function getAllowance($id)
     {
         $this->check($id, 0);
         $value = $this->storage->get($this->getKey($id));
@@ -65,6 +65,16 @@ class RateLimiter
         }
 
         return $this->maxAllowance;
+    }
+
+    public function getMaxAllowance()
+    {
+        return $this->maxAllowance;
+    }
+
+    public function getAllow($id)
+    {
+        return $this->getAllowance($id);
     }
 
     public function purge($id)

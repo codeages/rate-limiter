@@ -2,10 +2,6 @@
 
 namespace Codeages\RateLimiter\Storage;
 
-/**
- * @author Peter Chung <touhonoob@gmail.com>
- * @date May 16, 2015
- */
 class RedisStorage implements Storage
 {
     /**
