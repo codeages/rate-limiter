@@ -67,6 +67,20 @@ class RateLimiter
         return $this->maxAllowance;
     }
 
+    public function updateAllowance($id, $threshold)
+    {
+        $key = $this->getKey($id);
+        $value = $this->storage->get($key);
+        if ($value !== false) {
+            list($allowance, $lastCheckTime) = $this->unpackValue($value);
+            $updatedAllowance = ($allowance + $threshold) > 0 ? ($allowance + $threshold) : 0;
+        } else {
+            $updatedAllowance = $threshold > 0 ? $threshold : 0;
+        }
+
+        $this->storage->set($this->getKey($id), $this->packValue($updatedAllowance, time()), $this->period);
+    }
+
     public function getMaxAllowance()
     {
         return $this->maxAllowance;
