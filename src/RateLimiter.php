@@ -79,6 +79,8 @@ class RateLimiter
         }
 
         $this->storage->set($this->getKey($id), $this->packValue($updatedAllowance, time()), $this->period);
+
+        return $updatedAllowance;
     }
 
     public function getMaxAllowance()
