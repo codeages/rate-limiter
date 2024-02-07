@@ -18,7 +18,8 @@ class RateLimiterTest extends TestCase
 
     public function testCheckMySQLPDO()
     {
-        $pdo = new PDO(getenv('MYSQL_DSN'), getenv('MYSQL_USER'), getenv('MYSQL_MYSQL_PASSWORD'));
+        $pdo = new PDO(getenv('MYSQL_DSN'), getenv('MYSQL_USER'), getenv('MYSQL_PASSWORD'));
+        $this->createMysqlTable($pdo);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $storage = new \Codeages\RateLimiter\Storage\MySQLPDOStorage($pdo);
         $this->check($storage);
@@ -38,7 +39,8 @@ class RateLimiterTest extends TestCase
 
     public function testUpdateAllowanceMySQLPDO()
     {
-        $pdo = new PDO(getenv('MYSQL_DSN'), getenv('MYSQL_USER'), getenv('MYSQL_MYSQL_PASSWORD'));
+        $pdo = new PDO(getenv('MYSQL_DSN'), getenv('MYSQL_USER'), getenv('MYSQL_PASSWORD'));
+        $this->createMysqlTable($pdo);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $storage = new \Codeages\RateLimiter\Storage\MySQLPDOStorage($pdo);
         $this->updateAllowance($storage);
@@ -99,5 +101,23 @@ class RateLimiterTest extends TestCase
     private function getRateLimiter(Storage $storage)
     {
         return new RateLimiter(self::NAME, self::MAX_REQUESTS, self::PERIOD, $storage);
+    }
+
+    /**
+     * @param PDO $pdo
+     * @return void
+     */
+    private function createMysqlTable(PDO $pdo): void
+    {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS `ratelimit` (
+              `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `_key` varchar(128) NOT NULL,
+              `data` varchar(32) NOT NULL,
+              `deadline` int(10) unsigned NOT NULL,
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `_key` (`_key`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        ");
     }
 }
